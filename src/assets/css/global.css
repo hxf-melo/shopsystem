@@ -4,4 +4,6 @@ body,
     margin: 0;
     padding: 0;
     height: 100%;
+    user-select: none;
+    /* 禁止用户鼠标在页面上选中文字/图片等 */
 }

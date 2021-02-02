@@ -4,25 +4,12 @@
       <div class="login-avatar">
         <img src="@/assets/img/logo/logo.png" alt="" />
       </div>
-      <el-form
-        class="login-form"
-        ref="formReset"
-        :rules="loginFormRules"
-        :model="loginForm"
-        label-width="0px"
-      >
+      <el-form class="login-form" ref="formReset" :rules="loginFormRules" :model="loginForm" label-width="0px">
         <el-form-item prop="username">
-          <el-input
-            v-model="loginForm.username"
-            prefix-icon="iconfont icon-user"
-          ></el-input>
+          <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input
-            v-model="loginForm.password"
-            type="password"
-            prefix-icon="iconfont icon-3702mima"
-          ></el-input>
+          <el-input v-model="loginForm.password" type="password" prefix-icon="iconfont icon-3702mima"></el-input>
         </el-form-item>
         <el-form-item class="login-btn">
           <el-button type="primary" @click="login">登录</el-button>
@@ -77,13 +64,13 @@ export default {
       this.$refs.formReset.resetFields();
     },
     login() {
-      //登录预校验
+      //登录预校验,valid是布尔值
       this.$refs.formReset.validate(async (valid) => {
         if (!valid) return;
         const { data: res } = await this.$http.post("login", this.loginForm);
-        if (res.meta.status !== 200) return this.$message.error("登录失败");
-        this.$message.success("登录成功");
-        console.log(res);
+        // console.log(res);
+        if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+        this.$message.success(res.meta.msg);
         window.sessionStorage.setItem("token", res.data.token);
         this.$router.push("/home");
       });
