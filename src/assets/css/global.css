@@ -7,3 +7,28 @@ body,
     user-select: none;
     /* 禁止用户鼠标在页面上选中文字/图片等 */
 }
+
+.el-breadcrumb {
+    margin-bottom: 15px;
+}
+
+.el-card {
+    box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.el-table {
+    margin-top: 15px;
+}
+
+.el-table th,
+.el-table td {
+    text-align: center;
+}
+
+.el-table th.gutter {
+    display: table-cell !important
+}
+
+.el-pagination {
+    margin-top: 15px;
+}

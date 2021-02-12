@@ -4,12 +4,25 @@
       <div class="login-avatar">
         <img src="@/assets/img/logo/logo.png" alt="" />
       </div>
-      <el-form class="login-form" ref="formReset" :rules="loginFormRules" :model="loginForm" label-width="0px">
+      <el-form
+        class="login-form"
+        ref="formRef"
+        :rules="loginFormRules"
+        :model="loginForm"
+        label-width="0px"
+      >
         <el-form-item prop="username">
-          <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
+          <el-input
+            v-model="loginForm.username"
+            prefix-icon="iconfont icon-user"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" type="password" prefix-icon="iconfont icon-3702mima"></el-input>
+          <el-input
+            v-model="loginForm.password"
+            type="password"
+            prefix-icon="iconfont icon-3702mima"
+          ></el-input>
         </el-form-item>
         <el-form-item class="login-btn">
           <el-button type="primary" @click="login">登录</el-button>
@@ -25,58 +38,58 @@ export default {
   data() {
     return {
       loginForm: {
-        username: "admin",
-        password: "123456",
+        username: 'admin',
+        password: '123456',
       },
       loginFormRules: {
         username: [
           {
             required: true,
-            message: "请输入用户名:",
-            trigger: "blur",
+            message: '请输入用户名:',
+            trigger: 'blur',
           },
           {
             min: 3,
             max: 8,
-            message: "长度在 3 到 8 个字符",
-            trigger: "blur",
+            message: '长度在 3 到 8 个字符',
+            trigger: 'blur',
           },
         ],
         password: [
           {
             required: true,
-            message: "请输入密码:",
-            trigger: "blur",
+            message: '请输入密码:',
+            trigger: 'blur',
           },
           {
             min: 6,
             max: 15,
-            message: "长度在 6 到 15 个字符",
-            trigger: "blur",
+            message: '长度在 6 到 15 个字符',
+            trigger: 'blur',
           },
         ],
       },
-    };
+    }
   },
   methods: {
     //重置
     loginFormReset() {
-      this.$refs.formReset.resetFields();
+      this.$refs.formRef.resetFields()
     },
     login() {
       //登录预校验,valid是布尔值
-      this.$refs.formReset.validate(async (valid) => {
-        if (!valid) return;
-        const { data: res } = await this.$http.post("login", this.loginForm);
+      this.$refs.formRef.validate(async (valid) => {
+        if (!valid) return
+        const { data: res } = await this.$http.post('login', this.loginForm)
         // console.log(res);
-        if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
-        this.$message.success(res.meta.msg);
-        window.sessionStorage.setItem("token", res.data.token);
-        this.$router.push("/home");
-      });
+        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+        this.$message.success(res.meta.msg)
+        window.sessionStorage.setItem('token', res.data.token)
+        this.$router.push('/home')
+      })
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -85,7 +98,7 @@ export default {
   height: 100%;
 }
 .login-content {
-  width: 450px;
+  width: 500px;
   height: 350px;
   border-radius: 10px;
   background-color: #fff;
