@@ -144,18 +144,18 @@
 export default {
   data() {
     const checkMobile = (rule, value, cb) => {
-      let regMobile = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
-      if (regMobile.test(value)) return cb();
-      cb(new Error("手机号码格式不正确"));
-    };
+      let regMobile = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
+      if (regMobile.test(value)) return cb()
+      cb(new Error('手机号码格式不正确'))
+    }
     const checkEmail = (rule, value, cb) => {
-      let regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
-      if (regEmail.test(value)) return cb();
-      cb(new Error("邮箱格式不正确"));
-    };
+      let regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+      if (regEmail.test(value)) return cb()
+      cb(new Error('邮箱格式不正确'))
+    }
     return {
       queryInfo: {
-        query: "",
+        query: '',
         pagenum: 1,
         pagesize: 2,
       },
@@ -163,48 +163,48 @@ export default {
       total: 0,
       addDialogVisible: false,
       addFormList: {
-        username: "",
-        password: "",
-        email: "",
-        mobile: "",
+        username: '',
+        password: '',
+        email: '',
+        mobile: '',
       },
       addFormRule: {
         username: [
           {
             required: true,
-            message: "请输入用户名",
-            trigger: "blur",
+            message: '请输入用户名',
+            trigger: 'blur',
           },
-          { min: 3, max: 8, message: "长度在 3 到 8 个字符", trigger: "blur" },
+          { min: 3, max: 8, message: '长度在 3 到 8 个字符', trigger: 'blur' },
         ],
         password: [
           {
             required: true,
-            message: "请输入密码:",
-            trigger: "blur",
+            message: '请输入密码:',
+            trigger: 'blur',
           },
           {
             min: 6,
             max: 15,
-            message: "长度在 6 到 15 个字符",
-            trigger: "blur",
+            message: '长度在 6 到 15 个字符',
+            trigger: 'blur',
           },
         ],
         email: [
           {
             required: true,
-            message: "请输入邮箱:",
-            trigger: "blur",
+            message: '请输入邮箱:',
+            trigger: 'blur',
           },
-          { validator: checkEmail, trigger: "blur" },
+          { validator: checkEmail, trigger: 'blur' },
         ],
         mobile: [
           {
             required: true,
-            message: "请输入手机号:",
-            trigger: "blur",
+            message: '请输入手机号:',
+            trigger: 'blur',
           },
-          { validator: checkMobile, trigger: "blur" },
+          { validator: checkMobile, trigger: 'blur' },
         ],
       },
       editUserVisible: false,
@@ -213,115 +213,115 @@ export default {
         email: [
           {
             required: true,
-            message: "请输入邮箱:",
-            trigger: "blur",
+            message: '请输入邮箱:',
+            trigger: 'blur',
           },
-          { validator: checkEmail, trigger: "blur" },
+          { validator: checkEmail, trigger: 'blur' },
         ],
         mobile: [
           {
             required: true,
-            message: "请输入手机号:",
-            trigger: "blur",
+            message: '请输入手机号:',
+            trigger: 'blur',
           },
-          { validator: checkMobile, trigger: "blur" },
+          { validator: checkMobile, trigger: 'blur' },
         ],
       },
-    };
+    }
   },
   created() {
-    this.getUsersList();
+    this.getUsersList()
   },
   methods: {
     async getUsersList() {
-      const { data: res } = await await this.$http.get("users", {
+      const { data: res } = await await this.$http.get('users', {
         params: this.queryInfo,
-      });
-      if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
-      console.log(res);
-      this.userList = res.data.users;
-      this.total = res.data.total;
+      })
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      console.log(res)
+      this.userList = res.data.users
+      this.total = res.data.total
     },
     handleSizeChange(newSize) {
-      this.queryInfo.pagesize = newSize;
-      this.getUsersList();
+      this.queryInfo.pagesize = newSize
+      this.getUsersList()
     },
     handleCurrentChange(newPage) {
-      this.queryInfo.pagenum = newPage;
-      this.getUsersList();
+      this.queryInfo.pagenum = newPage
+      this.getUsersList()
     },
     async userStateChange(userInfo) {
-      console.log(userInfo);
+      console.log(userInfo)
       const { data: res } = await this.$http.put(
         `users/${userInfo.id}/state/${userInfo.mg_state}`
-      );
+      )
       if (res.meta.status !== 200) {
-        userInfo.mg_state = !userInfo.mg_state;
-        return this.$message.error(res.meta.msg);
+        userInfo.mg_state = !userInfo.mg_state
+        return this.$message.error(res.meta.msg)
       }
-      this.$message.success(res.meta.msg);
+      this.$message.success(res.meta.msg)
     },
     addDialogClose() {
-      this.$refs.addForm.resetFields();
+      this.$refs.addForm.resetFields()
     },
     addUser() {
       this.$refs.addForm.validate(async (valid) => {
-        if (!valid) return;
-        const { data: res } = await this.$http.post("users", this.addFormList);
+        if (!valid) return
+        const { data: res } = await this.$http.post('users', this.addFormList)
         // console.log(res);
-        if (res.meta.status !== 201) return this.$message.error(res.meta.msg);
-        this.$message.success(res.meta.msg);
-        this.addDialogVisible = false;
-        this.getUsersList();
-      });
+        if (res.meta.status !== 201) return this.$message.error(res.meta.msg)
+        this.$message.success(res.meta.msg)
+        this.addDialogVisible = false
+        this.getUsersList()
+      })
     },
     async showEditUser(id) {
-      const { data: res } = await this.$http.get("users/" + id);
-      if (res.meta.status !== 200) this.$message.error(res.meta.msg);
-      console.log(res);
-      this.editForm = res.data;
-      this.editUserVisible = true;
+      const { data: res } = await this.$http.get('users/' + id)
+      if (res.meta.status !== 200) this.$message.error(res.meta.msg)
+      console.log(res)
+      this.editForm = res.data
+      this.editUserVisible = true
     },
     editUserClose() {
-      this.$refs.editFormRef.resetFields();
+      this.$refs.editFormRef.resetFields()
     },
     editUser() {
       this.$refs.editFormRef.validate(async (valid) => {
-        if (!valid) return;
+        if (!valid) return
         const { data: res } = await this.$http.put(
-          "users/" + this.editForm.id,
+          'users/' + this.editForm.id,
           {
             email: this.editForm.email,
             mobile: this.editForm.mobile,
           }
-        );
-        console.log(res);
-        if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
-        this.$message.success(res.meta.msg);
-        this.editUserVisible = false;
-        this.getUsersList();
-      });
+        )
+        console.log(res)
+        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+        this.$message.success(res.meta.msg)
+        this.editUserVisible = false
+        this.getUsersList()
+      })
     },
     async removeUserById(id) {
       const confirmResult = await this.$confirm(
-        "此操作将永久删除该用户, 是否继续?",
-        "提示",
+        '此操作将永久删除该用户, 是否继续?',
+        '提示',
         {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
         }
-      ).catch((err) => err);
-      if (confirmResult !== "confirm")
-        return this.$message.info("已取消删除用户");
+      ).catch((err) => err)
+      if (confirmResult !== 'confirm')
+        return this.$message.info('已取消删除用户')
 
-      const { data: res } = await this.$http.delete("users/" + id);
-      if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
-      this.$message.success(res.meta.msg);
-      this.getUsersList();
+      const { data: res } = await this.$http.delete('users/' + id)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success(res.meta.msg)
+      this.getUsersList()
     },
   },
-};
+}
 </script>
 
 <style>

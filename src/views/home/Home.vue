@@ -3,7 +3,7 @@
     <!-- 页面头部 -->
     <el-header>
       <div>
-        <img src="~@/assets/img/logo/heima.png" alt="">
+        <img src="~@/assets/img/logo/heima.png" alt="" />
         <span>电商后台管理系统</span>
       </div>
       <el-button type="info" @click="logout">退出</el-button>
@@ -11,27 +11,45 @@
     <!-- 页面主体 -->
     <el-container>
       <!-- 左侧边栏 -->
-      <el-aside :width="isCollapse ? '64px':'200px' ">
+      <el-aside :width="isCollapse ? '64px' : '200px'">
         <div class="toggle-button" @click="toggleCollapse">|||</div>
         <!-- 侧边栏菜单 -->
-        <el-menu background-color="#606266" text-color="#fff" active-text-color="#40beff" 
-        unique-opened :collapse = isCollapse :collapse-transition = false>
-          <el-submenu :index="item.id + '' " v-for="item in MenusList" :key="item.id">
+        <el-menu
+          background-color="#606266"
+          text-color="#fff"
+          active-text-color="#40beff"
+          unique-opened
+          :collapse="isCollapse"
+          :collapse-transition="false"
+          router
+          :default-active="this.$route.path"
+        >
+          <el-submenu
+            :index="item.id + ''"
+            v-for="item in MenusList"
+            :key="item.id"
+          >
             <template slot="title">
               <i :class="iconObj[item.id]"></i>
-              <span>{{item.authName}}</span>
+              <span>{{ item.authName }}</span>
             </template>
-            <el-menu-item :index="submenu.id + '' " v-for="submenu in item.children" :key="submenu.id">
+            <el-menu-item
+              :index="'/' + submenu.path"
+              v-for="submenu in item.children"
+              :key="submenu.id"
+            >
               <template slot="title">
                 <i class="el-icon-menu"></i>
-                <span>{{submenu.authName}}</span>
-              </template>  
+                <span>{{ submenu.authName }}</span>
+              </template>
             </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
       <!-- 右侧内容主体 -->
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -40,15 +58,15 @@
 export default {
   data() {
     return {
-      MenusList:[],
-      iconObj:{
-        125:'iconfont icon-user',
-        103:'iconfont icon-tijikongjian',
-        101:'iconfont icon-shangpin' ,
-        102:'iconfont icon-danju' ,
-        145:'iconfont icon-baobiao' 
+      MenusList: [],
+      iconObj: {
+        125: 'iconfont icon-user',
+        103: 'iconfont icon-tijikongjian',
+        101: 'iconfont icon-shangpin',
+        102: 'iconfont icon-danju',
+        145: 'iconfont icon-baobiao',
       },
-      isCollapse:false,
+      isCollapse: false,
     }
   },
   created() {
@@ -56,20 +74,21 @@ export default {
   },
   methods: {
     logout() {
-      window.sessionStorage.clear();
-      this.$router.push("/login");
+      window.sessionStorage.clear()
+      this.$message('退出登录')
+      this.$router.push('/login')
     },
-   async getMenusList() {
-    const { data: res } = await await this.$http.get('Menus');
-    if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
-    console.log(res);
-    this.MenusList = res.data;
+    async getMenusList() {
+      const { data: res } = await this.$http.get('Menus')
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      console.log(res)
+      this.MenusList = res.data
     },
     toggleCollapse() {
       this.isCollapse = !this.isCollapse
-    }
+    },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -77,7 +96,7 @@ export default {
   height: 100%;
 }
 .el-header {
-  background-color: #b3c0d1;
+  background-color: #303133;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -98,7 +117,7 @@ export default {
   }
 }
 .el-main {
-  background-color: #C0C4CC;
+  background-color: #b3c0d1;
 }
 .iconfont {
   margin-right: 10px;
@@ -110,5 +129,6 @@ export default {
   line-height: 24px;
   text-align: center;
   letter-spacing: 0.2em;
+  cursor: pointer;
 }
 </style>
