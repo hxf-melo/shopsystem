@@ -61,7 +61,11 @@
               placement="top"
               :enterable="false"
             >
-              <el-button type="warning" icon="el-icon-setting"></el-button>
+              <el-button
+                type="warning"
+                icon="el-icon-setting"
+                @click="ShowAllotRolesVisible(scope.row)"
+              ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -137,6 +141,31 @@
         <el-button type="primary" @click="editUser">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 分配角色模块 -->
+    <el-dialog
+      title="分配角色"
+      :visible.sync="setRolesVisible"
+      width="50%"
+      @close="allotRolesClose"
+    >
+      <div>
+        <p>当前用户：{{ userInfo.username }}</p>
+        <p>当前角色：{{ userInfo.role_name }}</p>
+        <el-select v-model="selectRoleId" placeholder="请选择">
+          <el-option
+            v-for="item in rolesList"
+            :key="item.id"
+            :label="item.roleName"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRolesVisible = false">取 消</el-button>
+        <el-button type="primary" @click="allotRoles">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -157,7 +186,7 @@ export default {
       queryInfo: {
         query: '',
         pagenum: 1,
-        pagesize: 2,
+        pagesize: 5,
       },
       userList: [],
       total: 0,
@@ -227,6 +256,10 @@ export default {
           { validator: checkMobile, trigger: 'blur' },
         ],
       },
+      setRolesVisible: false,
+      userInfo: {},
+      rolesList: [],
+      selectRoleId: '',
     }
   },
   created() {
@@ -268,7 +301,7 @@ export default {
       this.$refs.addForm.validate(async (valid) => {
         if (!valid) return
         const { data: res } = await this.$http.post('users', this.addFormList)
-        // console.log(res);
+        console.log(res)
         if (res.meta.status !== 201) return this.$message.error(res.meta.msg)
         this.$message.success(res.meta.msg)
         this.addDialogVisible = false
@@ -318,6 +351,32 @@ export default {
       const { data: res } = await this.$http.delete('users/' + id)
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.$message.success(res.meta.msg)
+      this.getUsersList()
+    },
+    async ShowAllotRolesVisible(userInfo) {
+      this.userInfo = userInfo
+      this.roleId = userInfo.id
+      // console.log(userInfo)
+      const { data: res } = await this.$http.get('roles')
+      console.log(res)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.rolesList = res.data
+      this.setRolesVisible = true
+    },
+    allotRolesClose() {
+      this.selectRoleId = ''
+    },
+    async allotRoles() {
+      const { data: res } = await this.$http.put(
+        `users/${this.userInfo.id}/role`,
+        {
+          rid: this.selectRoleId,
+        }
+      )
+      // console.log(res)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success(res.meta.msg)
+      this.setRolesVisible = false
       this.getUsersList()
     },
   },

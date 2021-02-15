@@ -117,13 +117,13 @@ export default {
   }
 }
 .el-main {
-  background-color: #b3c0d1;
+  background-color: #909399;
 }
 .iconfont {
   margin-right: 10px;
 }
 .toggle-button {
-  background-color: #909399;
+  background-color: #b3c0d1;
   color: #fff;
   font-size: 10px;
   line-height: 24px;

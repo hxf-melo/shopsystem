@@ -15,7 +15,13 @@ const Users = () =>
 
 const Rights = () =>
     import ('@/views/rights/Rights')
+
+const Roles = () =>
+    import ('@/views/roles/Roles')
+
 Vue.use(VueRouter)
+
+
 
 const routes = [{
     path: '/',
@@ -38,6 +44,9 @@ const routes = [{
     }, {
         path: '/rights',
         component: Rights
+    }, {
+        path: '/roles',
+        component: Roles
     }]
 }]
 
