@@ -266,6 +266,7 @@ export default {
     this.getUsersList()
   },
   methods: {
+    // 获取用户列表
     async getUsersList() {
       const { data: res } = await await this.$http.get('users', {
         params: this.queryInfo,
@@ -275,14 +276,17 @@ export default {
       this.userList = res.data.users
       this.total = res.data.total
     },
+    // 监听页码尺寸变化
     handleSizeChange(newSize) {
       this.queryInfo.pagesize = newSize
       this.getUsersList()
     },
+    // 监听页面变化
     handleCurrentChange(newPage) {
       this.queryInfo.pagenum = newPage
       this.getUsersList()
     },
+    // 监听用户状态的变化
     async userStateChange(userInfo) {
       console.log(userInfo)
       const { data: res } = await this.$http.put(
@@ -294,9 +298,11 @@ export default {
       }
       this.$message.success(res.meta.msg)
     },
+    // 监听添加新用户对话框的关闭事件，重置表单数据
     addDialogClose() {
       this.$refs.addForm.resetFields()
     },
+    // 点击添加新的用户
     addUser() {
       this.$refs.addForm.validate(async (valid) => {
         if (!valid) return
@@ -308,6 +314,7 @@ export default {
         this.getUsersList()
       })
     },
+    // 展开编辑用户对话框
     async showEditUser(id) {
       const { data: res } = await this.$http.get('users/' + id)
       if (res.meta.status !== 200) this.$message.error(res.meta.msg)
@@ -315,9 +322,11 @@ export default {
       this.editForm = res.data
       this.editUserVisible = true
     },
+    // 监听编辑用户对话框的关闭事件，重置表单数据
     editUserClose() {
       this.$refs.editFormRef.resetFields()
     },
+    // 点击通过id修改用户信息
     editUser() {
       this.$refs.editFormRef.validate(async (valid) => {
         if (!valid) return
@@ -335,6 +344,7 @@ export default {
         this.getUsersList()
       })
     },
+    // 通过用户的id来删除用户
     async removeUserById(id) {
       const confirmResult = await this.$confirm(
         '此操作将永久删除该用户, 是否继续?',
@@ -353,6 +363,7 @@ export default {
       this.$message.success(res.meta.msg)
       this.getUsersList()
     },
+    // 展开分配角色对话框
     async ShowAllotRolesVisible(userInfo) {
       this.userInfo = userInfo
       this.roleId = userInfo.id
@@ -363,9 +374,11 @@ export default {
       this.rolesList = res.data
       this.setRolesVisible = true
     },
+    // 监听分配角色对话框的关闭事件，重置表单数据
     allotRolesClose() {
       this.selectRoleId = ''
     },
+    // 点击分配新的角色
     async allotRoles() {
       const { data: res } = await this.$http.put(
         `users/${this.userInfo.id}/role`,

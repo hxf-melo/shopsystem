@@ -222,15 +222,18 @@ export default {
     this.getRolesList()
   },
   methods: {
+    // 获取全部角色列表
     async getRolesList() {
       const { data: res } = await this.$http.get('roles')
       console.log(res)
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.rolesList = res.data
     },
+    // 监听添加新角色对话框的关闭事件，重置表单数据
     addRolesClose() {
       this.$refs.addRolesRef.resetFields()
     },
+    // 点击添加新的角色
     addRoles() {
       this.$refs.addRolesRef.validate(async (valid) => {
         if (!valid) return
@@ -245,15 +248,18 @@ export default {
         this.getRolesList()
       })
     },
+    // 通过id来展示编辑角色对话框
     async showEditRoles(id) {
       const { data: res } = await this.$http.get('roles/' + id)
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.editRolesForm = res.data
       this.editRolesVisible = true
     },
+    // 监听编辑角色对话框的关闭事件，重置表单数据
     editRolesClose() {
       this.$refs.editRolesRef.resetFields()
     },
+    // 点击编辑角色
     editRoles() {
       this.$refs.editRolesRef.validate(async (valid) => {
         if (!valid) return
@@ -271,6 +277,7 @@ export default {
         this.getRolesList()
       })
     },
+    // 通过id来删除角色
     async removeRolesById(id) {
       const confirmResults = await this.$confirm(
         '此操作将永久删除该角色, 是否继续?',
