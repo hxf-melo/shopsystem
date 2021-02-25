@@ -6,7 +6,7 @@
       <el-breadcrumb-item>商品管理</el-breadcrumb-item>
       <el-breadcrumb-item>商品分类</el-breadcrumb-item>
     </el-breadcrumb>
-    <!-- 分类列表模块 -->
+    <!-- 商品分类模块 -->
     <el-card>
       <el-row>
         <el-col>
