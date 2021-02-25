@@ -300,6 +300,8 @@ export default {
     async getParamsData() {
       if (this.selectedKeys.length !== 3) {
         this.selectedKeys = []
+        this.paramsManyData = []
+        this.paramsOnlyData = []
         return
       }
       const { data: res } = await this.$http.get(
