@@ -28,6 +28,9 @@ const Params = () =>
 const List = () =>
     import ('@/views/goods/List')
 
+const Add = () =>
+    import ('@/views/goods/Add')
+
 Vue.use(VueRouter)
 
 
@@ -65,6 +68,9 @@ const routes = [{
     }, {
         path: '/goods',
         component: List
+    }, {
+        path: '/goods/add',
+        component: Add
     }]
 }]
 
