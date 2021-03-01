@@ -33,17 +33,46 @@
         <el-table-column prop="goods_name" label="商品名称"> </el-table-column>
         <el-table-column prop="goods_price" label="商品价格(元)" width="120px">
         </el-table-column>
+        <el-table-column prop="goods_number" label="商品数量" width="80px">
+        </el-table-column>
         <el-table-column prop="goods_weight" label="商品重量" width="80px">
         </el-table-column>
-        <el-table-column prop="add_time" label="创建时间" width="180px">
+        <el-table-column prop="goods_state" label="商品状态" width="80px">
+          <template v-slot="scope">
+            <el-tag type="danger" v-if="scope.row.goods_state === 0"
+              >未通过</el-tag
+            >
+            <el-tag type="info" v-else-if="scope.row.goods_state === 1"
+              >审核中</el-tag
+            >
+            <el-tag type="success" v-else>已审核</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="is_promote" label="热销品" width="80px">
+          <template v-slot="scope">
+            <el-switch v-model="scope.row.is_promote"> </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column prop="add_time" label="创建时间" width="110px">
           <template v-slot="scope">
             {{ scope.row.add_time | dataFormat }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200px">
+        <el-table-column prop="upd_time" label="更新时间" width="110px">
           <template v-slot="scope">
-            <el-button type="primary" icon="el-icon-edit"></el-button>
+            {{ scope.row.upd_time | dataFormat }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="120px">
+          <template v-slot="scope">
             <el-button
+              size="small"
+              type="primary"
+              icon="el-icon-edit"
+              @click="showEditGoodsVisible(scope.row.goods_id)"
+            ></el-button>
+            <el-button
+              size="small"
               type="danger"
               icon="el-icon-delete"
               @click="removeById(scope.row.goods_id)"
@@ -63,6 +92,47 @@
       >
       </el-pagination>
     </el-card>
+    <!-- 修改商品列表数据 -->
+    <el-dialog
+      title="修改商品"
+      :visible.sync="editVisible"
+      width="50%"
+      @close="editFormClose"
+    >
+      <el-form
+        :model="editForm"
+        :rules="editFormRules"
+        ref="editFormRef"
+        label-width="100px"
+      >
+        <el-form-item label="商品名称:" prop="goods_name">
+          <el-input v-model="editForm.goods_name"></el-input>
+        </el-form-item>
+        <el-form-item label="商品价格:" prop="goods_price">
+          <el-input v-model="editForm.goods_price"></el-input>
+        </el-form-item>
+        <el-form-item label="商品数量:" prop="goods_number">
+          <el-input v-model="editForm.goods_number"></el-input>
+        </el-form-item>
+        <el-form-item label="商品重量:" prop="goods_weight">
+          <el-input v-model="editForm.goods_weight"></el-input>
+        </el-form-item>
+        <el-form-item label="商品图片:">
+          <img
+            :class="previewShow ? 'pics_sma' : 'pics_big'"
+            :src="item.pics_sma_url"
+            alt=""
+            v-for="item in editForm.pics"
+            :key="item.pics_id"
+            @click="preview"
+          />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editGoods">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -77,6 +147,31 @@ export default {
       },
       goodsList: [],
       total: 0,
+      editVisible: false,
+      editForm: [],
+      editFormRules: {
+        goods_name: {
+          required: true,
+          message: '请输入商品名称',
+          trigger: 'blur',
+        },
+        goods_price: {
+          required: true,
+          message: '请输入商品价格',
+          trigger: 'blur',
+        },
+        goods_number: {
+          required: true,
+          message: '请输入商品数量',
+          trigger: 'blur',
+        },
+        goods_weight: {
+          required: true,
+          message: '请输入商品重量',
+          trigger: 'blur',
+        },
+      },
+      previewShow: true,
     }
   },
   created() {
@@ -95,9 +190,11 @@ export default {
     },
     handleSizeChange(newSize) {
       this.queryInfo.pagesize = newSize
+      this.getGoodsList()
     },
     handleCurrentChange(newPage) {
       this.queryInfo.pagenum = newPage
+      this.getGoodsList()
     },
     async removeById(id) {
       const confirmReslult = await this.$confirm(
@@ -119,9 +216,51 @@ export default {
     goTOAdd() {
       this.$router.push('goods/add')
     },
+    async showEditGoodsVisible(id) {
+      const { data: res } = await this.$http.get('goods/' + id)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.editForm = res.data
+      console.log(res)
+      this.editVisible = true
+    },
+    editFormClose() {
+      this.$refs.editFormRef.resetFields()
+    },
+    editGoods() {
+      this.$refs.editFormRef.validate(async (valid) => {
+        if (!valid) return
+        const { data: res } = await this.$http.put(
+          'goods/' + this.editForm.goods_id,
+          {
+            goods_name: this.editForm.goods_name,
+            goods_price: this.editForm.goods_price,
+            goods_number: this.editForm.goods_number,
+            goods_weight: this.editForm.goods_weight,
+          }
+        )
+        console.log(res)
+        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+        this.$message.success(res.meta.msg)
+        this.editVisible = false
+        this.getGoodsList
+      })
+    },
+    preview() {
+      return (this.previewShow = !this.previewShow)
+    },
   },
 }
 </script>
 
 <style lang="less" scoped>
+.pics_sma {
+  width: 50px;
+}
+.pics_big {
+  width: 100%;
+}
+.el-form-item img {
+  margin-left: 5px;
+  border-radius: 5px;
+}
 </style>
