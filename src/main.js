@@ -16,17 +16,17 @@ import 'nprogress/nprogress.css'
 
 Vue.config.productionTip = false
 
-axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/';
+axios.defaults.baseURL = 'https://www.liulongbin.top:8888/api/private/v1/';
 axios.interceptors.request.use(config => {
-    NProgress.start()
-    config.headers.Authorization = window.sessionStorage.getItem('token')
-        // console.log(config);
-    return config
+  NProgress.start()
+  config.headers.Authorization = window.sessionStorage.getItem('token')
+    // console.log(config);
+  return config
 })
 axios.interceptors.response.use(config => {
-    NProgress.done()
+  NProgress.done()
 
-    return config
+  return config
 })
 Vue.prototype.$http = axios
 
@@ -35,20 +35,20 @@ Vue.use(VueQuillEditor)
 Vue.component('tree-table', TreeTable)
 
 Vue.filter('dataFormat', function(originVal) {
-    const dt = new Date(originVal)
+  const dt = new Date(originVal)
 
-    const y = dt.getFullYear()
-    const m = (dt.getMonth() + 1 + '').padStart(2, '0')
-    const d = (dt.getDate() + '').padStart(2, '0')
+  const y = dt.getFullYear()
+  const m = (dt.getMonth() + 1 + '').padStart(2, '0')
+  const d = (dt.getDate() + '').padStart(2, '0')
 
-    const hh = (dt.getHours() + '').padStart(2, '0')
-    const mm = (dt.getMinutes() + '').padStart(2, '0')
-    const ss = (dt.getSeconds() + '').padStart(2, '0')
+  const hh = (dt.getHours() + '').padStart(2, '0')
+  const mm = (dt.getMinutes() + '').padStart(2, '0')
+  const ss = (dt.getSeconds() + '').padStart(2, '0')
 
-    return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+  return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
 })
 
 new Vue({
-    router,
-    render: h => h(App)
+  router,
+  render: h => h(App)
 }).$mount('#app')
